@@ -1,33 +1,21 @@
+import { getByDisplayValue } from "@testing-library/dom";
 import { createStore } from "redux";
 
-const add = document.getElementById("add");
-const minus = document.getElementById("minus");
-const number = document.querySelector("span");
+const form = document.querySelector("form");
+const input = form.querySelector("input");
+const list = document.querySelector("ul");
 
-number.innerText = 0;
-
-const selection = Object.freeze({ add: `ADD`, minus: `MINUS` });
-
-const countModifier = (count = 0, action) => {
-  switch (action.type) {
-    case selection.add:
-      return count + 1;
-    case selection.minus:
-      return count - 1;
-    default:
-      return count;
-  }
+const displayTodo = (todo) => {
+  const li = document.createElement("li");
+  li.innerText = todo;
+  list.appendChild(li);
 };
 
-const countStore = createStore(countModifier);
+const handleSubmit = (e) => {
+  e.preventDefault();
+  const todo = input.value;
+  displayTodo(todo);
+  input.value = ``;
+};
 
-add.addEventListener("click", () => {
-  countStore.dispatch({ type: selection.add });
-});
-minus.addEventListener("click", () => {
-  countStore.dispatch({ type: selection.minus });
-});
-
-countStore.subscribe(() => {
-  number.innerText = countStore.getState();
-});
+form.addEventListener("submit", handleSubmit);
